@@ -10,3 +10,4 @@ resources to learn from:
 - https://github.com/Alikhll/golang-developer-roadmap
 - https://github.com/hackstoic/golang-open-source-projects
 - https://go.dev/doc/contribute
+- https://github.com/golang/go
