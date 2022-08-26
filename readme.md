@@ -1,6 +1,7 @@
 until methods/8
 
 
-resources 
+resources to learn from:
 - https://github.com/golang/go/wiki
 - https://go.dev/doc/
+- https://github.com/aceld/golang
