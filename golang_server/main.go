@@ -9,6 +9,8 @@ package main
 import (
 	"fmt"
 	"html/template"
+	"io/fs"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -76,8 +78,6 @@ var validPath = regexp.MustCompile("^/(edit|save|view)/([a-zA-Z0-9]+)$")
 func makeHandler(fn func(http.ResponseWriter, *http.Request, string)) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		m := validPath.FindStringSubmatch(r.URL.Path)
-		fmt.Println(m)
-		fmt.Println(m[2])
 		if m == nil {
 			http.NotFound(w, r)
 			return
@@ -86,10 +86,58 @@ func makeHandler(fn func(http.ResponseWriter, *http.Request, string)) http.Handl
 	}
 }
 
+func validateFileType(filename string, fileType string) bool {
+	var validFilename = regexp.MustCompile("^\\w+\\." + fileType)
+	m := validFilename.FindStringSubmatch(filename)
+	if m == nil {
+		return false
+	}
+	return true
+}
+
+func getTxtFiles() []fs.FileInfo {
+	files, err := ioutil.ReadDir(".")
+	var txtFiles []string
+	if err != nil {
+		return nil
+	}
+
+	for _, file := range files {
+		isText := validateFileType(file.Name(), "txt")
+		if !isText {
+			continue
+		}
+		txtFiles = append(txtFiles, file.Name())
+	}
+	return files
+}
+
+func getHtml(file fs.FileInfo) string {
+	sz := len(file.Name())
+	name := file.Name()[:sz-4]
+	oneRow := fmt.Sprintf("<li><a href=\"/view/%s\">%s</a></li>", name, name)
+	return oneRow
+}
+
+func listHandler(w http.ResponseWriter, r *http.Request) {
+	files := getTxtFiles()
+	all := ""
+	for _, file := range files {
+		all += getHtml(file)
+	}
+	all = fmt.Sprintf("<div><ul>%s</ul></div>", all)
+	_, err := fmt.Fprintln(w, all)
+	if err != nil {
+		return
+	}
+}
+
 func main() {
+	getTxtFiles()
 	http.HandleFunc("/view/", makeHandler(viewHandler))
 	http.HandleFunc("/edit/", makeHandler(editHandler))
 	http.HandleFunc("/save/", makeHandler(saveHandler))
+	http.HandleFunc("/list/", listHandler)
 
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
