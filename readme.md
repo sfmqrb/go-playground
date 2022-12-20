@@ -1,7 +1,7 @@
-until methods/8
+## Why go?
+Why not?
 
-
-resources to learn from:
+## How to learn?
 
 source | Priority (linux-based :)
 --- | ---
