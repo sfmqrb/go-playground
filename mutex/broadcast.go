@@ -15,7 +15,7 @@ func main() {
 		var goroutineRunning sync.WaitGroup
 		goroutineRunning.Add(1)
 		go func() {
-			defer goroutineRunning.Done()
+			goroutineRunning.Done()
 			c.L.Lock()
 			defer c.L.Unlock()
 			c.Wait()
