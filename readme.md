@@ -5,20 +5,22 @@ Why not?
 
 source | Priority (linux-based :)
 --- | ---
-https://github.com/golang/go/wiki | <li>- [x] 2</li>
-https://go.dev/tour/ | <li>- [x] 1</li>
-https://go.dev/doc/code | <li>- [x] 3</li>
-https://godbolt.org/ | <li>- [x] just if you are geek enough</li>
-https://github.com/astaxie/build-web-application-with-golang | <li>- [x] 4</li>
-https://github.com/Alikhll/golang-developer-roadmap | <li>- [x] 0</li>
-https://github.com/hackstoic/golang-open-source-projects | <li>- [x] 5</li>
-https://go.dev/doc/contribute |
-https://github.com/teh-cmc/go-internals | 
+https://github.com/golang/go/wiki | covers wide range of questions I have about go
+https://go.dev/tour/ | <li> [x] </li>
+https://go.dev/doc/code | <li> [x] </li>
+https://godbolt.org/ |  waste of time :) in case that you are geek enough \| insert your go programs to learn more about go-internals
+https://github.com/astaxie/build-web-application-with-golang | <li> [x] </li>
+https://github.com/hackstoic/golang-open-source-projects | contribute to some of the open-source projects out there to deepen your understanding and engage with an outstanding community! 
+https://go.dev/doc/contribute | Or maybe become a go compiler contributer! I am proud of you :)
+https://github.com/teh-cmc/go-internals | in case that you are geek enough \| It is a dead book but worth mentioning
 
 ------------
 
 ## Deeper knowledge
 
-book - concurrency in go : [link](https://www.oreilly.com/library/view/concurrency-in-go/9781491941294/)
+Read [concurrency in go](https://www.oreilly.com/library/view/concurrency-in-go/9781491941294/)! I'm currently reading it in Nowruz Holiday.
 
+## Inspired by
+
+[golang developer roadmap](https://github.com/Alikhll/golang-developer-roadmap)
 
