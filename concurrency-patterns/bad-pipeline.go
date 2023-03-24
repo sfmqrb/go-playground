@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"math/rand"
+	"runtime"
 	"time"
 )
 
@@ -74,6 +75,9 @@ func primeFinder(
 				return
 			case input := <-inputStream:
 				isPrime := true
+				// very bad primefinder
+				// want to test time and
+				// optimize using fan-in/fan-out
 				for j := 2; j <= int(input/2)+1; j++ {
 					if input%j == 0 {
 						isPrime = false
@@ -89,14 +93,46 @@ func primeFinder(
 	return primeStream
 }
 
+func fanIn(
+	done <-chan interface{},
+	channels ...<-chan interface{},
+) <-chan interface{} {
+	combined := make(chan interface{})
+	combiner := func(c <-chan interface{}) {
+		for {
+			select {
+			case <-done:
+				return
+			case tmp := <-c:
+				combined <- tmp
+			}
+		}
+		close(combined)
+	}
+
+	for _, channel := range channels {
+		go combiner(channel)
+	}
+	return combined
+}
+
 func main() {
-	rand := func() interface{} { return rand.Intn(50000000) }
 	done := make(chan interface{})
 	defer close(done)
 	start := time.Now()
+	rand := func() interface{} { return rand.Intn(50000000) }
 	randIntStream := toInt(done, repeatFn(done, rand))
+
+	numFinders := runtime.NumCPU()
+
+	fmt.Printf("Spinning up %d prime finders.\n", numFinders)
+	finders := make([]<-chan interface{}, numFinders)
+
 	fmt.Println("Primes:")
-	for prime := range take(done, primeFinder(done, randIntStream), 10) {
+	for i := 0; i < numFinders; i++ {
+		finders[i] = primeFinder(done, randIntStream)
+	}
+	for prime := range take(done, fanIn(done, finders...), 10) {
 		fmt.Printf("\t%d\n", prime)
 	}
 	fmt.Printf("Search took: %v", time.Since(start))
