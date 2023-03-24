@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"math"
 	"math/rand"
 	"time"
 )
@@ -14,7 +13,7 @@ func take(
 ) <-chan interface{} {
 	takeStream := make(chan interface{})
 	go func() {
-		close(takeStream)
+		defer close(takeStream)
 		for counter := 0; counter < num; counter++ {
 			select {
 			case <-done:
@@ -78,19 +77,14 @@ func primeFinder(
 					return
 				}
 				isPrime := true
-				for j := 2; j <= int(math.Sqrt(float64(input))); j++ {
+				for j := 2; j <= int(input/2)+1; j++ {
 					if input%j == 0 {
 						isPrime = false
 						break
 					}
 				}
 				if isPrime {
-					select {
-					case <-done:
-						return
-					case primeStream <- input:
-						fmt.Println(input)
-					}
+					primeStream <- input
 				}
 			}
 		}
