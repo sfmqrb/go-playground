@@ -72,10 +72,7 @@ func primeFinder(
 			select {
 			case <-done:
 				return
-			case input, ok := <-inputStream:
-				if !ok {
-					return
-				}
+			case input := <-inputStream:
 				isPrime := true
 				for j := 2; j <= int(input/2)+1; j++ {
 					if input%j == 0 {
