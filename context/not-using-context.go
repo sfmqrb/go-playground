@@ -30,6 +30,9 @@ func main() {
 		}
 
 	}()
+	// uncomment these lines to see that channel `done` is working`
+	//time.Sleep(time.Second)
+	//close(done)
 	wg.Wait()
 }
 
@@ -82,7 +85,7 @@ func genFarewell(done <-chan interface{}) (string, error) {
 func locale(done <-chan interface{}) (string, error) {
 	select {
 	case <-done:
-		return "", fmt.Errorf("canceled")
+		return "", fmt.Errorf("canceled\n")
 	case <-time.After(10 * time.Second):
 	}
 	return "EN/US", nil
