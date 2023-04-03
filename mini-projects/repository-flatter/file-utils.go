@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"io"
 	"io/ioutil"
 	"os"
@@ -68,3 +69,43 @@ func YankFilesRecursively(srcDir string, dstDir string) error {
 	return nil
 }
 
+
+func CreateJsonFileFromDir(dirPath, outputPath string) error {
+	// Create a map to hold the file contents
+	fileContents := make(map[string]string)
+
+	// Read the contents of all files in the directory
+	files, err := ioutil.ReadDir(dirPath)
+	if err != nil {
+		return err
+	}
+
+	for _, file := range files {
+		if file.IsDir() {
+			continue
+		}
+
+		filename := filepath.Join(dirPath, file.Name())
+		fileData, err := ioutil.ReadFile(filename)
+		if err != nil {
+			return err
+		}
+
+		// Store the file contents in the map, with the file name as the key
+		fileContents[file.Name()] = string(fileData)
+	}
+
+	// Encode the map as JSON
+	jsonData, err := json.Marshal(fileContents)
+	if err != nil {
+		return err
+	}
+
+	// Write the JSON data to file
+	err = ioutil.WriteFile(outputPath, jsonData, 0644)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

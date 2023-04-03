@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"path"
 	"path/filepath"
 )
 
@@ -46,12 +47,18 @@ func main() {
 	if err != nil {
 		log.Fatalf("Error moving files: %v", err)
 	}
-
 	fmt.Println("Files moved successfully!")
+	
+	// Create JSON file from source directory contents
+	err = CreateJsonFileFromDir(distDirAbs, path.Join(distDirAbs, "files.json"))
+	if err != nil {
+		log.Fatalf("Error creating JSON file: %v", err)
+	}
+
+	fmt.Println("JSON file created successfully!")
 }
 
 func showUsage() {
 	fmt.Println("Usage: mytool --src-dir=<source directory> --dist-dir=<destination directory>")
 	flag.PrintDefaults()
 }
-
