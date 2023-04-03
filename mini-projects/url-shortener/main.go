@@ -1,6 +1,8 @@
 package main
 
 import (
+	"time"
+	"errors"
 	"fmt"
 	"math/rand"
 	"net/http"
@@ -9,12 +11,12 @@ import (
 
 const (
 	baseURL     = "http://localhost:8080/"
-	shortURLLen = 6
+	shortURLLen = 10
 )
 
 var (
-	shortURLMap = make(map[string]string)
-	inverseMap  = make(map[string]string)
+	shortURLMap   = make(map[string]string)
+	inverseURLMap = make(map[string]string)
 )
 
 func homeHandler(w http.ResponseWriter, r *http.Request) {
@@ -26,16 +28,17 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		shortURL := generateShortURL(longURL)
 		shortURLMap[shortURL] = longURL
-		inverseMap[longURL] = shortURL
+		inverseURLMap[longURL] = shortURL
 		fmt.Fprintf(w, "Short URL: %s", baseURL+shortURL)
 		return
-	}
-
-	if r.Method == "GET" {
+	} else if r.Method == "GET" {
 		fmt.Fprintf(w, `<html><body><form method="POST">
 		Long URL: <input type="text" name="longurl">
 		<input type="submit" value="Shorten">
 		</form></body></html>`)
+	} else {
+		fmt.Println(errors.New("Wrong Request. Only supports POST and GET").Error())
+		return
 	}
 }
 
@@ -51,11 +54,11 @@ func redirectHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func generateShortURL(longURL string) string {
-	shortURL, ok := inverseMap[longURL]
+	shortURL, ok := inverseURLMap[longURL]
 	if ok {
 		return shortURL
 	}
-
+	rand.Seed(time.Now().UnixNano())
 	const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 	var hashStr string
 	for len(hashStr) < shortURLLen {
@@ -67,6 +70,7 @@ func generateShortURL(longURL string) string {
 func main() {
 	http.HandleFunc("/home/", homeHandler)
 	http.HandleFunc("/", redirectHandler)
+
 	fmt.Println("Listening on http://localhost:8080/")
 	err := http.ListenAndServe(":8080", nil)
 	if err != nil {
