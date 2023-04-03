@@ -71,7 +71,7 @@ func main() {
 	http.HandleFunc("/home/", homeHandler)
 	http.HandleFunc("/", redirectHandler)
 
-	fmt.Println("Listening on http://localhost:8080/")
+	fmt.Printf("Listening on %v\n", baseURL)
 	err := http.ListenAndServe(":8080", nil)
 	if err != nil {
 		panic(err)
