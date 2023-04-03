@@ -14,7 +14,7 @@ const (
 
 var (
 	shortURLMap = make(map[string]string)
-	inverseMap = make(map[string]string)
+	inverseMap  = make(map[string]string)
 )
 
 func homeHandler(w http.ResponseWriter, r *http.Request) {
@@ -30,10 +30,13 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Short URL: %s", baseURL+shortURL)
 		return
 	}
-	fmt.Fprintf(w, `<html><body><form method="POST">
-	Long URL: <input type="text" name="longurl">
-	<input type="submit" value="Shorten">
-	</form></body></html>`)
+
+	if r.Method == "GET" {
+		fmt.Fprintf(w, `<html><body><form method="POST">
+		Long URL: <input type="text" name="longurl">
+		<input type="submit" value="Shorten">
+		</form></body></html>`)
+	}
 }
 
 func redirectHandler(w http.ResponseWriter, r *http.Request) {
@@ -70,4 +73,3 @@ func main() {
 		panic(err)
 	}
 }
-
