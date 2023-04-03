@@ -14,6 +14,7 @@ const (
 
 var (
 	shortURLMap = make(map[string]string)
+	inverseMap = make(map[string]string)
 )
 
 func homeHandler(w http.ResponseWriter, r *http.Request) {
@@ -21,6 +22,7 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 		longURL := r.FormValue("longurl")
 		shortURL := generateShortURL(longURL)
 		shortURLMap[shortURL] = longURL
+		inverseMap[longURL] = shortURL
 		fmt.Fprintf(w, "Short URL: %s", baseURL+shortURL)
 		return
 	}
@@ -42,6 +44,11 @@ func redirectHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func generateShortURL(longURL string) string {
+	shortURL, ok := inverseMap[longURL]
+	if ok {
+		return shortURL
+	}
+
 	const chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 	var hashStr string
 	for len(hashStr) < shortURLLen {
