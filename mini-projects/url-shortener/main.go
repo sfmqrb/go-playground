@@ -20,6 +20,10 @@ var (
 func homeHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "POST" {
 		longURL := r.FormValue("longurl")
+		if len(longURL) > 1000 { // limit the length of the long URL
+			fmt.Fprintln(w, "Error: long URL is too long")
+			return
+		}
 		shortURL := generateShortURL(longURL)
 		shortURLMap[shortURL] = longURL
 		inverseMap[longURL] = shortURL
