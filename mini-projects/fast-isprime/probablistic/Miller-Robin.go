@@ -1,26 +1,13 @@
 package main
 
 import (
-	"fmt"
+	_ "fmt"
 	"math/big"
 	"math/rand"
 	"time"
 )
 
-func main() {
-	// Seed the random number generator with the current time
-	rand.Seed(time.Now().UnixNano())
-
-	// Test if the number 7919 is prime
-	n := big.NewInt(7919)
-	if isPrime(n, 10) {
-		fmt.Println(n, "is probably prime")
-	} else {
-		fmt.Println(n, "is definitely composite")
-	}
-}
-
-// isPrime tests if the given number is prime using the Miller-Rabin primality test
+// IsPrime tests if the given number is prime using the Miller-Rabin primality test
 // k is the number of witnesses to use (larger k increases confidence)
 func isPrime(n *big.Int, k int) bool {
 	// Handle small cases
@@ -76,4 +63,3 @@ func isPrime(n *big.Int, k int) bool {
 	// All witnesses have passed the test, n is probably prime
 	return true
 }
-
