@@ -34,19 +34,15 @@ func (ch *ConsistentHash) AddNode(node string) {
 	sort.Ints(ch.keys)
 }
 
+
 func (ch *ConsistentHash) RemoveNode(node string) {
 	for i := 0; i < ch.replicaCnt; i++ {
 		key := int(ch.hashFunc([]byte(node + strconv.Itoa(i))))
 		delete(ch.hashMap, key)
+		ch.keys = remove(ch.keys, key)
 	}
-	ch.keys = []int{}
-	// not optimal
-	for key := range ch.hashMap {
-		ch.keys = append(ch.keys, key)
-	}
-	// not optimal
-	sort.Ints(ch.keys)
 }
+
 
 func (ch *ConsistentHash) GetNode(key string) string {
 	hash := int(ch.hashFunc([]byte(key)))
@@ -59,6 +55,25 @@ func (ch *ConsistentHash) GetNode(key string) string {
 	return ch.hashMap[ch.keys[idx]]
 }
 
+func remove(slice []int, item int) []int {
+	for i, v := range slice {
+		if v == item {
+			return append(slice[:i], slice[i+1:]...)
+		}
+	}
+	return slice
+}
+// PrintState prints the current state of the hash ring.
+func (ch *ConsistentHash) PrintState() {
+	fmt.Println("Consistent Hash Ring State:")
+	fmt.Println("Replica Count per Node:", ch.replicaCnt)
+	fmt.Println("Virtual Nodes:")
+	for key, value := range ch.hashMap {
+		fmt.Println("  Virtual Node Hash:", key, " => Node:", value)
+	}
+	fmt.Println()
+}
+
 func main() {
 	// Example usage
 	hashFunc := func(data []byte) uint32 {
@@ -69,8 +84,11 @@ func main() {
 	ch.AddNode("Node2")
 	ch.AddNode("Node3")
 
+	ch.PrintState()
+
 	fmt.Println(ch.GetNode("Key1")) // Output: Node2
 	ch.RemoveNode("Node2")
+	ch.PrintState()
 	fmt.Println(ch.GetNode("Key1")) // Output: Node3
 }
 
