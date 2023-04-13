@@ -1,7 +1,8 @@
-//package main
-//
-//import "fmt"
-//
+package main
+
+import "fmt"
+import "math"
+
 //var isHello bool = true
 //var isBye bool
 //
@@ -31,36 +32,14 @@
 //)
 //
 //func main() {
-//	fmt.Printf("Type: %T Value: %v\n", false, false)
-//	fmt.Printf("Type: %T Value: %v\n", MaxInt, MaxInt)
-//	fmt.Printf("Type: %T Value: %v\n", z, z)
-//	i := 42
-//	f := float64(i)
-//	u := uint(f)
-//	fmt.Println(u)
+//	
+//	
+//	
+//	
+//	
+//	
+//	
 //}
-
-
-//package main
-//
-//import "fmt"
-//
-//const (
-//	Big float64 = 1 << 511 + 1 << 511
-//)
-//
-//func needFloat(x float64) float64 {
-//	return x * 0.1
-//}
-//
-//func main() {
-//	fmt.Println(needFloat(Big))
-//}
-
-
-package main
-
-import "fmt"
 
 func main() {
 	sum := 0
@@ -81,8 +60,20 @@ func main() {
 	base := 1_000_000_000
 	for {
 		x += 1
-		if x % base == 0 {
+		if x%base == 0 {
 			fmt.Println(x / base)
 		}
 	}
+	var x, y int = 3, 4
+	var f float64 = math.Pow((float64(x*x + y*y)), 0.5)
+	var z uint = uint(f)
+	fmt.Println(x, y, z)
+	fmt.Printf("Type: %T Value: %v\n", false, false)
+	fmt.Printf("Type: %T Value: %v\n", MaxInt, MaxInt)
+	fmt.Printf("Type: %T Value: %v\n", z, z)
+	i := 42
+	f := float64(i)
+	u := uint(f)
+	fmt.Println(u)
+
 }
